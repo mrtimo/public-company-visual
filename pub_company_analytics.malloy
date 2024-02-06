@@ -1,0 +1,66 @@
+source: sub is duckdb.sql("""
+  select * from 'sub2022*.parquet'
+""") extend {
+    dimension: major_code is trunc(sic / 100)
+}
+
+-- Companies submitting 10-Q's by month
+# bar_chart
+run: sub -> {
+  group_by:
+    accepted_month is accepted.month
+  aggregate: no_filings is count(adsh)
+  where: form = "10-Q"
+}
+
+run: sub -> {
+    select: major_code
+}
+
+run: sub -> {
+    group_by: major_code
+    aggregate: no_filings is count(adsh)
+    where: form = "10-Q"
+}
+
+run: sub -> {
+  group_by: 
+    e1 is trunc(1.49)
+    e2 is trunc(1.51)
+    e3 is trunc(1.5)
+    e4 is trunc(-1.5)
+    e5 is trunc(1.5, 0)
+    e6 is trunc(1.551, 1)
+    e7 is trunc(1234 / 10)
+    e8 is trunc(1.4, null)
+    e9 is trunc(null, 1)
+}
+
+-- Companies submitting 10-Q's by month
+# bar_chart
+run: sub -> {
+  group_by:
+
+    accepted_month is accepted.month
+  aggregate: no_filings is count(adsh)
+  where: form = "10-Q"
+}
+
+-- Companies submitting 10-Q's by week
+# bar_chart
+run: sub -> {
+  group_by:
+
+    accepted_week is accepted.week
+  aggregate: no_filings is count(adsh)
+  where: form = "10-Q"
+}
+
+-- Companies submitting 10-Q's by week, by month
+# bar_chart
+run: sub -> {
+  group_by:
+    accepted_week is accepted.week
+  aggregate: no_filings is count(adsh)
+  where: form = "10-Q" and accepted ? @2022-11
+}
